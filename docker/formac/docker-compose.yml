@@ -58,6 +58,7 @@ services:
 
 volumes:
   storage-volume:
+    driver: local
   vendor-volume:
     driver: local
   db-volume:
