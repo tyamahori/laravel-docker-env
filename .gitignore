@@ -1,6 +1,6 @@
 /node_modules
-/public/hot
-/public/storage
+/laravel/public/hot
+/laravel/public/storage
 /storage/*.key
 /laravel/vendor
 .env
