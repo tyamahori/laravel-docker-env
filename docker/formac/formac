@@ -1,0 +1,79 @@
+#!/bin/sh
+
+COMPOSE_PROJECT_NAME="laravel-docker-for-mac"
+
+APP_NAME="${COMPOSE_PROJECT_NAME}-php"
+RUN_APP="docker exec -it ${APP_NAME}"
+
+REMOTE_VENDOR_DIR="/opt/laravel/vendor"
+LOCAL_VENDOR_TARGET="../../laravel/vendor/*"
+LOCAL_LARAVEL_DIR="../../laravel"
+
+case "$1" in
+
+"setup")
+  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  docker-compose down -v
+  docker-compose up -d --build
+  $RUN_APP cp .env.example .env
+  $RUN_APP composer install
+  $RUN_APP chmod -R 777 storage
+  $RUN_APP ./artisan key:generate
+  $RUN_APP ./artisan ide-helper:generate
+  $RUN_APP ./artisan ide-helper:models --nowrite
+  $RUN_APP dockerize -timeout 60s -wait tcp://laravel-docker-for-mac-mysql:3306
+  $RUN_APP ./artisan migrate
+  docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
+  ;;
+
+"copy-vendor-dir")
+  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
+  ;;
+
+"up")
+  docker-compose up -d
+  ;;
+
+"down")
+  docker-compose down
+  ;;
+
+"logs")
+  docker-compose logs -f
+  ;;
+
+"login")
+  docker exec -it $APP_NAME /bin/bash
+  ;;
+
+"artisan")
+  $RUN_APP ./artisan ${@:2}
+  ;;
+
+"test")
+  $RUN_APP ./vendor/bin/phpunit
+  ;;
+
+"composer")
+  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  $RUN_APP composer ${@:2}
+  docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
+  ;;
+
+"test-github-actions")
+  RUN_APP="docker exec -i ${APP_NAME}"
+  docker-compose up -d --build
+  $RUN_APP cp .env.example .env
+  $RUN_APP composer install
+  $RUN_APP chmod -R 777 storage
+  $RUN_APP ./artisan key:generate
+  $RUN_APP dockerize -timeout 60s -wait tcp://laravel-docker-for-mac-mysql:3306
+  $RUN_APP ./artisan migrate
+  $RUN_APP ./vendor/bin/phpunit
+  ;;
+
+*)
+  $RUN_APP ${@:1}
+  ;;
+esac
