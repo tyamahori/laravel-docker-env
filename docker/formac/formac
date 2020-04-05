@@ -6,8 +6,11 @@ APP_NAME="${COMPOSE_PROJECT_NAME}-php"
 RUN_APP="docker exec -it ${APP_NAME}"
 
 REMOTE_VENDOR_DIR="/opt/laravel/vendor"
+REMOTE_LARAVEL_DIR="/opt/laravel"
+
 LOCAL_VENDOR_TARGET="../../laravel/vendor/*"
 LOCAL_LARAVEL_DIR="../../laravel"
+LOCAL_STORAGE_DIR="../../laravel/storage"
 
 case "$1" in
 
@@ -16,6 +19,7 @@ case "$1" in
   docker-compose down -v
   docker-compose up -d --build
   $RUN_APP cp .env.example .env
+  docker cp $LOCAL_STORAGE_DIR $APP_NAME:$REMOTE_LARAVEL_DIR
   $RUN_APP composer install
   $RUN_APP chmod -R 777 storage
   $RUN_APP ./artisan key:generate

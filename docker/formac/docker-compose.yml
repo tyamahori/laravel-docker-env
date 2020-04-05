@@ -20,6 +20,7 @@ services:
     volumes:
       - ../../laravel:/opt/laravel
       - vendor-volume:/opt/laravel/vendor
+      - storage-volume:/opt/laravel/storage
       - ./php/php.ini:/usr/local/etc/php/php.ini
     working_dir: /opt/laravel
     environment:
@@ -55,6 +56,7 @@ services:
       TZ: Asia/Tokyo
 
 volumes:
+  storage-volume:
   vendor-volume:
     driver: local
   db-volume:
