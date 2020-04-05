@@ -11,6 +11,7 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ../../laravel/public:/opt/laravel/public
+      - storage-volume:/opt/laravel/storage
     depends_on:
       - laravel-docker-for-mac-php
 
