@@ -61,6 +61,13 @@ case "$1" in
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
 
+"cache-clear")
+  $RUN_APP ./artisan cache:clear
+  $RUN_APP ./artisan config:clear
+  $RUN_APP ./artisan route:clear
+  $RUN_APP ./artisan view:clear
+  ;;
+
 "test-github-actions")
   RUN_APP="docker exec -i ${APP_NAME}"
   docker-compose up -d --build
