@@ -8,7 +8,7 @@ RUN apt-get update \
     && docker-php-ext-configure gd --with-freetype --with-jpeg  \
     && docker-php-ext-install -j$(nproc) gd \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
+    && mv composer.phar /usr/local/bin/composer && composer self-update && composer global require hirak/prestissimo \
     && apt-get install -y zip unzip git \
     && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
