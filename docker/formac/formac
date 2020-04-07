@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 COMPOSE_PROJECT_NAME="laravel-docker-for-mac"
 
@@ -15,7 +15,7 @@ LOCAL_STORAGE_DIR="../../laravel/storage"
 case "$1" in
 
 "setup")
-  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  rm -rf ../../laravel/vendor
   docker-compose down -v
   docker-compose up -d --build
   $RUN_APP cp .env.example .env
