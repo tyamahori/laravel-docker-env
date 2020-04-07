@@ -31,7 +31,7 @@ case "$1" in
   ;;
 
 "copy-vendor-dir")
-  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  rm -rf $LOCAL_VENDOR_TARGET
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
 
@@ -60,7 +60,7 @@ case "$1" in
   ;;
 
 "composer")
-  /bin/rm -rf $LOCAL_VENDOR_TARGET
+  rm -rf $LOCAL_VENDOR_TARGET
   $RUN_APP composer ${@:2}
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
