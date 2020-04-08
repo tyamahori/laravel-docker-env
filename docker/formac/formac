@@ -31,7 +31,7 @@ case "$1" in
   ;;
 
 "copy-vendor-dir")
-  rm -rf $LOCAL_VENDOR_TARGET
+  rm -rf ../../laravel/vendor/*
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
 
