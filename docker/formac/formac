@@ -8,9 +8,11 @@ RUN_APP="docker exec -it ${APP_NAME}"
 REMOTE_VENDOR_DIR="/opt/laravel/vendor"
 REMOTE_LARAVEL_DIR="/opt/laravel"
 
-LOCAL_VENDOR_TARGET="../../laravel/vendor/*"
 LOCAL_LARAVEL_DIR="../../laravel"
-LOCAL_STORAGE_DIR="../../laravel/storage"
+LOCAL_STORAGE_DIR=$LOCAL_LARAVEL_DIR/storage
+LOCAL_VENDOR_DIR=$LOCAL_LARAVEL_DIR/vendor
+LOCAL_VENDOR_FILES=$LOCAL_VENDOR_DIR/*
+LOCAL_VENDOR_HIDDEN_FILES=$LOCAL_VENDOR_DIR/.*
 
 case "$1" in
 
@@ -60,7 +62,8 @@ case "$1" in
   ;;
 
 "composer")
-  rm -rf $LOCAL_VENDOR_TARGET
+  rm -rf $LOCAL_VENDOR_FILES
+  rm -rf $LOCAL_VENDOR_HIDDEN_FILES 2> /dev/null
   $RUN_APP composer ${@:2}
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
