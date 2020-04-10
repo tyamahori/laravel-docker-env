@@ -1,5 +1,7 @@
 FROM php:7.4-fpm
 
+ADD . /opt/laravel
+
 ENV DOCKERIZE_VERSION v0.6.1
 
 RUN apt-get update \
