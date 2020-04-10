@@ -1,21 +1,22 @@
 #!/bin/bash
 
+# プロジェクト名定義
 COMPOSE_PROJECT_NAME="laravel-docker-for-mac"
 
+# コンテナ名定義
 NGINX_NAME="${COMPOSE_PROJECT_NAME}-nginx"
-RUN_NGINX="docker exec -it ${NGINX_NAME}"
-
 APP_NAME="${COMPOSE_PROJECT_NAME}-php"
+
+# 実行コマンド定義
+RUN_NGINX="docker exec -it ${NGINX_NAME}"
 RUN_APP="docker exec -it ${APP_NAME}"
 
+# コンテナ内のパス定義
 REMOTE_VENDOR_DIR="/opt/laravel/vendor"
-REMOTE_LARAVEL_DIR="/opt/laravel"
 
+# ローカルのパス定義
 LOCAL_LARAVEL_DIR="../../laravel"
-LOCAL_STORAGE_DIR=$LOCAL_LARAVEL_DIR/storage
 LOCAL_VENDOR_DIR=$LOCAL_LARAVEL_DIR/vendor
-LOCAL_VENDOR_FILES=$LOCAL_VENDOR_DIR/*
-LOCAL_VENDOR_HIDDEN_FILES=$LOCAL_VENDOR_DIR/.*
 
 case "$1" in
 
