@@ -2,6 +2,9 @@
 
 COMPOSE_PROJECT_NAME="laravel-docker-for-mac"
 
+NGINX_NAME="${COMPOSE_PROJECT_NAME}-nginx"
+RUN_NGINX="docker exec -it ${NGINX_NAME}"
+
 APP_NAME="${COMPOSE_PROJECT_NAME}-php"
 RUN_APP="docker exec -it ${APP_NAME}"
 
@@ -17,23 +20,23 @@ LOCAL_VENDOR_HIDDEN_FILES=$LOCAL_VENDOR_DIR/.*
 case "$1" in
 
 "setup")
-  rm -rf ../../laravel/vendor
+  rm -rf $LOCAL_VENDOR_DIR
   docker-compose down -v
   docker-compose up -d --build
+  $RUN_APP dockerize -timeout 60s -wait tcp://laravel-docker-for-mac-mysql:3306
   $RUN_APP cp .env.example .env
-  docker cp $LOCAL_STORAGE_DIR $APP_NAME:$REMOTE_LARAVEL_DIR
   $RUN_APP composer install
   $RUN_APP chmod -R 777 storage
+  $RUN_APP ./artisan storage:link
   $RUN_APP ./artisan key:generate
   $RUN_APP ./artisan ide-helper:generate
   $RUN_APP ./artisan ide-helper:models --nowrite
-  $RUN_APP dockerize -timeout 60s -wait tcp://laravel-docker-for-mac-mysql:3306
   $RUN_APP ./artisan migrate
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
 
 "copy-vendor-dir")
-  rm -rf ../../laravel/vendor/*
+  rm -rf $LOCAL_VENDOR_DIR
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
 
@@ -49,8 +52,12 @@ case "$1" in
   docker-compose logs -f
   ;;
 
-"login")
+"php")
   docker exec -it $APP_NAME /bin/bash
+  ;;
+
+"nginx")
+  docker exec -it $NGINX_NAME /bin/bash
   ;;
 
 "artisan")
@@ -62,8 +69,7 @@ case "$1" in
   ;;
 
 "composer")
-  rm -rf $LOCAL_VENDOR_FILES
-  rm -rf $LOCAL_VENDOR_HIDDEN_FILES 2> /dev/null
+  rm -rf $LOCAL_VENDOR_DIR
   $RUN_APP composer ${@:2}
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
   ;;
