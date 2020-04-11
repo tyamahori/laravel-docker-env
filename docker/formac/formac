@@ -12,7 +12,8 @@ RUN_NGINX="docker exec -it ${NGINX_NAME}"
 RUN_APP="docker exec -it ${APP_NAME}"
 
 # コンテナ内のパス定義
-REMOTE_VENDOR_DIR="/opt/laravel/vendor"
+REMOTE_LARAVEL_DIR="/opt/laravel"
+REMOTE_VENDOR_DIR=$REMOTE_LARAVEL_DIR/vendor
 
 # ローカルのパス定義
 LOCAL_LARAVEL_DIR="../../laravel"
@@ -32,6 +33,9 @@ case "$1" in
   $RUN_APP ./artisan ide-helper:models --nowrite
   $RUN_APP ./artisan migrate
   docker cp $APP_NAME:$REMOTE_VENDOR_DIR $LOCAL_LARAVEL_DIR
+  docker cp $APP_NAME:$REMOTE_LARAVEL_DIR/_ide_helper.php $LOCAL_LARAVEL_DIR
+  docker cp $APP_NAME:$REMOTE_LARAVEL_DIR/_ide_helper_models.php $LOCAL_LARAVEL_DIR
+  docker image prune -f
   ;;
 
 "copy-vendor-dir")
