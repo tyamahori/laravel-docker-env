@@ -25,11 +25,9 @@ case "$1" in
   docker-compose down -v
   docker-compose up -d --build
   $RUN_APP dockerize -timeout 60s -wait tcp://laravel-docker-for-mac-mysql:3306
-  $RUN_APP cp .env.example .env
   $RUN_APP composer install
   $RUN_APP chmod -R 777 storage
   $RUN_APP ./artisan storage:link
-  $RUN_APP ./artisan key:generate
   $RUN_APP ./artisan ide-helper:generate
   $RUN_APP ./artisan ide-helper:models --nowrite
   $RUN_APP ./artisan migrate
