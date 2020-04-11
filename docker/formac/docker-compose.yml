@@ -61,7 +61,7 @@ services:
       LDE_DB_DATABASE: laravel
       LDE_DB_USERNAME: laravel
       LDE_DB_PASSWORD: laravel
-      LDE_LOG_CHANNEL: daily
+      LDE_APP_LOG: daily
       LDE_APP_DEBUG: 'true'
       LDE_APP_ENV: local
       LDE_APP_URL: http://localhost

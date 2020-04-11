@@ -123,6 +123,16 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    /**
+     * ログの出力形式
+     */
+    'log' => env('APP_LOG', 'daily'),
+
+    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+
+    'log_max_files' => '5',
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
