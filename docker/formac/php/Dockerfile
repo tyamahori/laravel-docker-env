@@ -1,6 +1,6 @@
 FROM php:7.4-fpm
 
-ADD . /opt/laravel
+COPY . /opt/laravel
 
 ENV DOCKERIZE_VERSION v0.6.1
 
@@ -14,4 +14,5 @@ RUN apt-get update \
     && apt-get install -y zip unzip git \
     && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && cd /opt/laravel && composer install && chmod 777 -R storage
