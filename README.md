@@ -28,3 +28,9 @@ laravel/vendorディレクトリはホスト側から消さないでください
 |PHP|7.4|
 |Laravel|7.4|
 |MySQL|8.0|
+
+
+```
+docker build -t tyamahori-nginx:latest -f docker/aws/nginx/Dockerfile .
+docker build -t tyamahori-php:latest -f docker/aws/php/Dockerfile .
+```
