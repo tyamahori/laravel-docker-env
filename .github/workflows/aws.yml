@@ -63,6 +63,14 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docker/aws/nginx/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Download task definition test
+    - name: Download task definition
+      id: download-taskdefinition
       run: |
-        aws ecs describe-task-definition --task-definition api-task --query taskDefinition > task-definition.json
+        aws ecs describe-task-definition --task-definition api-task --query taskDefinition > task-definition.json && ls -la
+
+    - name: Deploy to Amazon ECS service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        service: api-service
+        cluster: nginx-public-subnet
