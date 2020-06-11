@@ -62,7 +62,9 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG -f docker/aws/nginx/Dockerfile .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/dockerfile .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG
 
     - name: Download task definition
       id: download-taskdefinition
