@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    log::info('test', [
+        'message' => 'hige'
+    ]);
     return view('welcome');
 });
