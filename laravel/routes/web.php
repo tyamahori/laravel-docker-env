@@ -15,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     logger('test', ['message' => 'sample']);
-    return view('welcome');
+
+    return [
+        'time' => now(),
+    ];
 });
