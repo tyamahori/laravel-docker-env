@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {{ now() }}
 {{ request()->ip() }}
+{{ 'TTTTTTTTTT' }}
 {{ logger(request()->ip()) }}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
