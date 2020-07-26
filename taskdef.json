@@ -1,5 +1,6 @@
 {
   "ipcMode": null,
+  "executionRoleArn": "arn:aws:iam::211264461622:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "dnsSearchDomains": null,
@@ -89,18 +90,15 @@
     }
   ],
   "placementConstraints": [],
-  "memory": "2048",
+  "memory": "1024",
   "taskRoleArn": null,
-  "compatibilities": [
-    "FARGATE"
-  ],
   "family": "api-task",
   "pidMode": null,
   "requiresCompatibilities": [
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "1024",
+  "cpu": "512",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
   "volumes": []
