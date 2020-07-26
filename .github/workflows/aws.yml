@@ -50,30 +50,51 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
+    - name: Build, tag, and push nginx image to Amazon ECR
+      id: build-nginx
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY_NGINX: ${{ secrets.AWS_ECR_REPO_NAME_NGINX }}
-        ECR_REPOSITORY_PHP: ${{ secrets.AWS_ECR_REPO_NAME_PHP }}
         IMAGE_TAG: latest
       run: |
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG -f docker/aws/nginx/Dockerfile .
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG
+
+    - name: Build, tag, and push nginx image to Amazon ECR
+      id: build-php
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY_PHP: ${{ secrets.AWS_ECR_REPO_NAME_PHP }}
+        IMAGE_TAG: latest
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG
 
-    - name: Download task definition
-      id: download-taskdefinition
-      run: |
-        aws ecs describe-task-definition --task-definition api-task --query taskDefinition > task-definition.json && ls -la
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: nginx-task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: nginx-container
+        image: ${{ steps.build-nginx.outputs.image }}
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: php-task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ steps.nginx-task-def.outputs.task-definition }}
+        container-name: php-container
+        image: ${{ steps.build-php.outputs.image }}
 
     - name: Deploy to Amazon ECS service
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: ${{ steps.php-task-def.outputs.task-definition }}
         service: api
         cluster: sample-app
