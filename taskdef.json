@@ -89,7 +89,7 @@
     }
   ],
   "placementConstraints": [],
-  "memory": "1024",
+  "memory": "2048",
   "taskRoleArn": null,
   "compatibilities": [
     "FARGATE"
