@@ -50,7 +50,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push nginx image to Amazon ECR
+    - name: Build, tag, and push n Nginx image to Amazon ECR
       id: build-nginx
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -62,8 +62,9 @@ jobs:
         # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG -f docker/aws/nginx/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_NGINX:$IMAGE_TAG"
 
-    - name: Build, tag, and push nginx image to Amazon ECR
+    - name: Build, tag, and push PHP image to Amazon ECR
       id: build-php
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -75,8 +76,9 @@ jobs:
         # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG"
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
+    - name: Fill in the new image ID of Nginx in the Amazon ECS task definition
       id: nginx-task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
@@ -84,7 +86,7 @@ jobs:
         container-name: nginx-container
         image: ${{ steps.build-nginx.outputs.image }}
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
+    - name: Fill in the new image ID of PHP in the Amazon ECS task definition
       id: php-task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
