@@ -50,7 +50,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push n Nginx image to Amazon ECR
+    - name: Build, tag, and push Nginx image to Amazon ECR
       id: build-nginx
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -77,6 +77,11 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG -f docker/aws/php/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_PHP:$IMAGE_TAG"
+
+    - name: Get task-definition.json file
+      id: get-task-definition-json
+      run: |
+        aws ecs describe-task-definition --task-definition api-task --query taskDefinition > task-definition.json && ls -la
 
     - name: Fill in the new image ID of Nginx in the Amazon ECS task definition
       id: nginx-task-def
