@@ -91,6 +91,9 @@
   "placementConstraints": [],
   "memory": "1024",
   "taskRoleArn": null,
+  "compatibilities": [
+    "FARGATE"
+  ],
   "family": "api-task",
   "pidMode": null,
   "requiresCompatibilities": [
