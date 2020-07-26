@@ -17,6 +17,6 @@ Route::get('/', static function () {
     logger('test', ['message' => 'sample']);
 
     return [
-        'time-setting' => now(),
+        'time222-setting' => now(),
     ];
 });
