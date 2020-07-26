@@ -17,6 +17,6 @@ Route::get('/', function () {
     logger('test', ['message' => 'sample']);
 
     return [
-        'time' => now(),
+        'time??' => now(),
     ];
 });
